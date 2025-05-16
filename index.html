@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sponsorluk Sistemi</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    user-select:none;
+  }
+  .container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  input, textarea, button {
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+  }
+  input:focus, textarea:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  button {
+    cursor: pointer;
+    background: #007bff;
+    color: white;
+    border: none;
+    font-weight: bold;
+    transition: background 0.3s;
+  }
+  button:hover {
+    background: #0056b3;
+  }
+  button.close-btn {
+    background: #dc3545 !important;
+  }
+  .error {
+    color: red;
+    font-size: 14px;
+    margin-top: -6px;
+    margin-bottom: 10px;
+  }
+  nav {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  nav button {
+    flex: 1;
+    max-width: 120px;
+  }
+  .kayan-kartlar {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 10px 0;
+    scrollbar-width: thin;
+    scrollbar-color: #007bff transparent;
+  }
+  .kayan-kartlar::-webkit-scrollbar {
+    height: 8px;
+  }
+  .kayan-kartlar::-webkit-scrollbar-thumb {
+    background: #007bff;
+    border-radius: 4px;
+  }
+  .kart {
+    flex: 0 0 auto;
+    width: 160px;
+    height: 110px;
+    background: #007bff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    transition: background 0.3s;
+  }
+  .kart:hover {
+    background: #0056b3;
+  }
+  /* Modal ve overlay */
+  .overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.4);
+    z-index: 999;
+  }
+  .modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    max-width: 480px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: white;
+    border-radius: 12px;
+    padding: 25px 30px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+  }
+  .hidden { display: none !important; }
+  pre {
+    background: #eee;
+    border-radius: 6px;
+    padding: 10px;
+    white-space: pre-wrap;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+<!-- GİRİŞ / KAYIT -->
+<div class="container" id="girisEkrani">
+  <h2>Giriş Yap veya Kayıt Ol</h2>
+  <input type="email" id="email" placeholder="Email" autocomplete="username" />
+  <input type="password" id="sifre" placeholder="Şifre" autocomplete="current-password" />
+  <p id="girisMesaj" class="error"></p>
+  <button onclick="girisYap()">Giriş Yap</button>
+  <button onclick="kayitOl()">Kayıt Ol</button>
+</div>
+
+<!-- ANA SAYFA -->
+<div class="container hidden" id="anaSayfa">
+  <nav>
+    <button onclick="basvuruAc()">Başvuru Formu</button>
+    <button onclick="ayarlarAc()">Ayarlar</button>
+    <button onclick="cikisYap()" style="background:#dc3545;">Çıkış Yap</button>
+  </nav>
+  <h2>Hoşgeldin, <span id="kullaniciIsmi"></span>!</h2>
+  <div class="kayan-kartlar" id="kartlar"></div>
+</div>
+
+<!-- Başvuru Modal -->
+<div class="overlay hidden" id="overlayBasvuru" onclick="basvuruKapat()"></div>
+<div class="modal hidden" id="basvuruModal">
+  <h2>Başvuru Formu</h2>
+  <form id="basvuruForm">
+    <input required name="isim" placeholder="İsim" />
+    <input required name="soyad" placeholder="Soyad" />
+    <input required name="telefon" placeholder="Telefon" />
+    <input required name="yas" type="number" min="1" required placeholder="Yaş" />
+    <input required name="okul" placeholder="Okul" />
+    <input required name="yer" placeholder="Yaşadığınız Yer" />
+    <input name="site" placeholder="Web Site URL (Opsiyonel)" />
+    <input required name="sirket" placeholder="Şirket İsminiz" />
+    <input required name="yardimci" placeholder="Yardımcı İsminiz" />
+    <input required name="posta" placeholder="Posta Kodunuz" />
+    <textarea name="mesaj" placeholder="Bizimle paylaşmak istedikleriniz"></textarea>
+    <input required name="mail" type="email" placeholder="Mailiniz" />
+    <p id="basvuruMesaj" class="error"></p>
+    <button type="submit">Başvuru Gönder</button>
+    <button type="button" class="close-btn" onclick="basvuruKapat()">Kapat</button>
+  </form>
+</div>
+
+<!-- Ayarlar Modal -->
+<div class="overlay hidden" id="overlayAyarlar" onclick="ayarlarKapat()"></div>
+<div class="modal hidden" id="ayarlarModal">
+  <h2>Hesap Ayarları</h2>
+  <input id="newIsim" placeholder="Yeni İsim" />
+  <input id="newMail" placeholder="Yeni Mail" />
+  <input id="newSifre" type="password" placeholder="Yeni Şifre" />
+  <button onclick="guncelleHesap()">Güncelle</button>
+
+  <h2>Başvuru Ayarları</h2>
+  <button onclick="gosterBasvuru()">Başvuru Bilgilerini Göster</button>
+  <button onclick="silBasvuru()" style="background:#dc3545;">Başvuruyu Sil</button>
+
+  <pre id="basvuruBilgileri"></pre>
+
+  <button type="button" class="close-btn" onclick="ayarlarKapat()">Kapat</button>
+</div>
+
+<script>
+  // Sayfa açıldığında
+  window.onload = () => {
+    if(localStorage.getItem('email') && localStorage.getItem('sifre')){
+      kullaniciGirisYapildi();
+    } else {
+      girisEkraniAc();
+    }
+    kartlariYukle();
+  };
+
+  // Giriş ekranını aç
+  function girisEkraniAc(){
+    document.getElementById('girisEkrani').classList.remove('hidden');
+    document.getElementById('anaSayfa').classList.add('hidden');
+    basvuruKapat();
+    ayarlarKapat();
+    temizleGirisFormu();
+  }
+
+  // Giriş yap
+  function girisYap(){
+    const email = document.getElementById('email').value.trim();
+    const sifre = document.getElementById('sifre').value.trim();
+    const mesaj = document.getElementById('girisMesaj');
+    mesaj.textContent = '';
+
+    if(!email || !sifre){
+      mesaj.textContent = 'Email ve şifre giriniz.';
+      return;
+    }
+
+    const kayitEmail = localStorage.getItem('email');
+    const kayitSifre = localStorage.getItem('sifre');
+
+    if(kayitEmail === email && kayitSifre === sifre){
+      kullaniciGirisYapildi();
+    } else {
+      mesaj.textContent = 'Email veya şifre yanlış.';
+    }
+  }
+
+ <!-- Kayıt ol fonksiyonu -->
+function kayitOl(){
+  const email = document.getElementById('email').value.trim();
+  const sifre = document.getElementById('sifre').value.trim();
+  const mesaj = document.getElementById('girisMesaj');
+  mesaj.textContent = '';
+
+  if(!email || !sifre){
+    mesaj.textContent = 'Email ve şifre giriniz.';
+    return;
+  }
+  if(localStorage.getItem('email')){
+    mesaj.textContent = 'Zaten kayıtlı kullanıcı var, giriş yapınız.';
+    return;
+  }
+
+  localStorage.setItem('email', email);
+  localStorage.setItem('sifre', sifre);
+  localStorage.setItem('isim', email.split('@')[0]);
+  
+  mesaj.style.color = 'green';
+  mesaj.textContent = 'Kayıt başarılı! Giriş yapılıyor...';
+
+  setTimeout(() => {
+    kullaniciGirisYapildi();
+    mesaj.style.color = 'red'; // reset renk
+    mesaj.textContent = '';
+  }, 1500);
+}
+
+
+  // Başarılı giriş sonrası
+  function kullaniciGirisYapildi(){
+    document.getElementById('girisEkrani').classList.add('hidden');
+    document.getElementById('anaSayfa').classList.remove('hidden');
+    document.getElementById('kullaniciIsmi').textContent = localStorage.getItem('isim') || 'Kullanıcı';
+  }
+
+  // Çıkış yap
+  function cikisYap(){
+    localStorage.removeItem('email');
+    localStorage.removeItem('sifre');
+    localStorage.removeItem('isim');
+    girisEkraniAc();
+  }
+
+  // Giriş formu temizle
+  function temizleGirisFormu(){
+    document.getElementById('email').value = '';
+    document.getElementById('sifre').value = '';
+    document.getElementById('girisMesaj').textContent = '';
+  }
+
+  // Sponsor kartları
+  const sponsorlar = [
+    { isim: "Sponsor 1", link: "https://ornek1.com" },
+    { isim: "Sponsor 2", link: "https://ornek2.com" },
+    { isim: "Sponsor 3", link: "https://ornek3.com" },
+    { isim: "Sponsor 4", link: "https://ornek4.com" },
+    { isim: "Sponsor 5", link: "https://ornek5.com" },
+    { isim: "Sponsor 6", link: "https://ornek6.com" },
+    { isim: "Sponsor 7", link: "https://ornek7.com" }
+  ];
+  function kartlariYukle(){
+    const kartlarDiv = document.getElementById('kartlar');
+    kartlarDiv.innerHTML = '';
+    sponsorlar.forEach(s => {
+const div = document.createElement('div');
+div.className = 'kart';
+div.textContent = s.isim;
+div.onclick = () => window.open(s.link, '_blank');
+kartlarDiv.appendChild(div);
+});
+}
+
+// Başvuru aç/kapat
+function basvuruAc(){
+document.getElementById('basvuruModal').classList.remove('hidden');
+document.getElementById('overlayBasvuru').classList.remove('hidden');
+document.getElementById('basvuruMesaj').textContent = '';
+document.getElementById('basvuruForm').reset();
+}
+function basvuruKapat(){
+document.getElementById('basvuruModal').classList.add('hidden');
+document.getElementById('overlayBasvuru').classList.add('hidden');
+}
+
+// Ayarlar aç/kapat
+function ayarlarAc(){
+document.getElementById('ayarlarModal').classList.remove('hidden');
+document.getElementById('overlayAyarlar').classList.remove('hidden');
+document.getElementById('basvuruBilgileri').textContent = '';
+document.getElementById('newIsim').value = localStorage.getItem('isim') || '';
+document.getElementById('newMail').value = localStorage.getItem('email') || '';
+document.getElementById('newSifre').value = '';
+}
+function ayarlarKapat(){
+document.getElementById('ayarlarModal').classList.add('hidden');
+document.getElementById('overlayAyarlar').classList.add('hidden');
+}
+
+// Hesap güncelle
+function guncelleHesap(){
+const isim = document.getElementById('newIsim').value.trim();
+const mail = document.getElementById('newMail').value.trim();
+const sifre = document.getElementById('newSifre').value.trim();
+
+javascript
+Kopyala
+Düzenle
+if(!isim || !mail){
+  alert('İsim ve mail boş olamaz!');
+  return;
+}
+localStorage.setItem('isim', isim);
+localStorage.setItem('email', mail);
+if(sifre) localStorage.setItem('sifre', sifre);
+document.getElementById('kullaniciIsmi').textContent = isim;
+alert('Bilgiler güncellendi!');
+ayarlarKapat();
+}
+
+// Başvuru formu submit
+document.getElementById('basvuruForm').addEventListener('submit', function(e){
+e.preventDefault();
+const formData = new FormData(this);
+let basvuruData = {};
+formData.forEach((v,k) => basvuruData[k] = v.trim());
+
+javascript
+Kopyala
+Düzenle
+})
+// Başvuru formu submit
+document.getElementById('basvuruForm').addEventListener('submit', function(e){
+  e.preventDefault();
+
+  const formData = new FormData(this);
+  let basvuruData = {};
+  formData.forEach((value, key) => {
+    basvuruData[key] = value.trim();
+  });
+
+  // Zorunlu alanlar kontrolü
+  const zorunlu = ['isim','soyad','telefon','yas','okul','yer','sirket','yardimci','posta','mail'];
+  for(let alan of zorunlu){
+    if(!basvuruData[alan]){
+      document.getElementById('basvuruMesaj').textContent = `"${alan}" alanını doldurmalısınız!`;
+      return;
+    }
+  }
+
+  localStorage.setItem('basvuru', JSON.stringify(basvuruData));
+  const mesaj = document.getElementById('basvuruMesaj');
+  mesaj.style.color = 'green';
+  mesaj.textContent = 'Başvuru kaydedildi, mail programınız açılıyor...';
+
+  // mailto body'sini düzgün encode ile hazırla
+  let body = 'Sponsorluk Başvurusu:%0D%0A';
+  for(let key in basvuruData){
+    body += `${key}: ${basvuruData[key]}%0D%0A`;
+  }
+
+  const mailLink = `mailto:merdem58171.3@gmail.com?subject=Sponsorluk Başvurusu&body=${encodeURIComponent(body)}`;
+
+  setTimeout(() => {
+    window.location.href = mailLink;
+    basvuruKapat();
+  }, 1500);
+});
+
+
+// Başvuru göster
+function gosterBasvuru(){
+const basvuru = localStorage.getItem('basvuru');
+if(!basvuru){
+alert('Henüz başvuru yapılmamış.');
+return;
+}
+document.getElementById('basvuruBilgileri').textContent = basvuru;
+}
+
+// Başvuru sil
+function silBasvuru(){
+if(confirm('Başvuruyu silmek istediğinize emin misiniz?')){
+localStorage.removeItem('basvuru');
+document.getElementById('basvuruBilgileri').textContent = '';
+alert('Başvuru silindi.');
+}
+}
+</script>
+
+</body> </html>
