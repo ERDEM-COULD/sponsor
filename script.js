@@ -323,7 +323,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 name: "Animatronik",
                 description: "En iyi 3d figür",
                 website: "https://web-site-belirtilmemiş",
-                imageFile: "logo1.jpg"
+                imageFile: "logo.jpg"
             },
             {
                 name: "InnoSoft",
