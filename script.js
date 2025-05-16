@@ -325,60 +325,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 website: "https://web-site-belirtilmemiş",
                 imageFile: "logo.jpg"
             },
-            {
-                name: "InnoSoft",
-                description: "Yazılım geliştirmede yenilikçi",
-                website: "https://innosoft.example.com",
-                logo: "https://via.placeholder.com/150?text=InnoSoft"
-            },
-            {
-                name: "GreenEnergy",
-                description: "Sürdürülebilir enerji çözümleri",
-                website: "https://greenenergy.example.com",
-                logo: "https://via.placeholder.com/150?text=GreenEnergy"
-            },
-            {
-                name: "EduFuture",
-                description: "Eğitim teknolojilerinde öncü",
-                website: "https://edufuture.example.com",
-                logo: "https://via.placeholder.com/150?text=EduFuture"
-            },
-            {
-                name: "HealthPlus",
-                description: "Sağlık hizmetlerinde mükemmellik",
-                website: "https://healthplus.example.com",
-                logo: "https://via.placeholder.com/150?text=HealthPlus"
-            },
-            {
-                name: "FoodExpress",
-                description: "Hızlı ve sağlıklı yemek hizmeti",
-                website: "https://foodexpress.example.com",
-                logo: "https://via.placeholder.com/150?text=FoodExpress"
-            },
-            {
-                name: "TravelNow",
-                description: "Seyahat deneyimleriniz için",
-                website: "https://travelnow.example.com",
-                logo: "https://via.placeholder.com/150?text=TravelNow"
-            },
-            {
-                name: "BuildRight",
-                description: "İnşaat sektöründe kalite",
-                website: "https://buildright.example.com",
-                logo: "https://via.placeholder.com/150?text=BuildRight"
-            },
-            {
-                name: "FashionHub",
-                description: "Moda dünyasının merkezi",
-                website: "https://fashionhub.example.com",
-                logo: "https://via.placeholder.com/150?text=FashionHub"
-            },
-            {
-                name: "AutoMasters",
-                description: "Otomotiv sektöründe uzman",
-                website: "https://automasters.example.com",
-                logo: "https://via.placeholder.com/150?text=AutoMasters"
-            }
+           
         ];
         
         sponsorsSlider.innerHTML = '';
