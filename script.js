@@ -320,9 +320,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function loadSponsors() {
         const sponsors = [
             {
-                name: "TechCorp",
-                description: "Teknoloji çözümlerinde lider",
-                website: "https://techcorp.example.com",
+                name: "Animatronik",
+                description: "En iyi 3d figür",
+                website: "https://web-site-belirtilmemiş",
                 logo: "https://via.placeholder.com/150?text=TechCorp"
             },
             {
