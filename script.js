@@ -324,10 +324,59 @@ document.addEventListener('DOMContentLoaded', function() {
                 description: "En iyi 3d figür",
                 website: "https://web-site-belirtilmemiş",
                 imageFile: "logo.jpg"
+                countdownDuration: 10000 // 10 saniye
             },
            
         ];
-        
+        const sponsorContainer = document.querySelector(".sponsors-slider");
+
+sponsorData.forEach((sponsor, index) => {
+  const card = document.createElement("div");
+  card.classList.add("sponsor-card");
+  card.dataset.id = index;
+
+  const countdownId = `sponsorshipTimer_${index}`;
+  let endTime = localStorage.getItem(countdownId);
+
+  if (!endTime) {
+    endTime = Date.now() + sponsor.countdownDuration;
+    localStorage.setItem(countdownId, endTime);
+  } else {
+    endTime = parseInt(endTime);
+  }
+
+  const countdownHTML = `
+    <div class="countdown" id="countdown-${index}">Süre başlıyor...</div>
+    <div class="active-message" id="active-${index}" style="display: none;">🎉 Sponsorluk Aktif!</div>
+  `;
+
+  card.innerHTML = `
+    <img src="${sponsor.imageFile}" alt="${sponsor.name}" class="sponsor-logo">
+    <h3>${sponsor.name}</h3>
+    <p>${sponsor.description}</p>
+    <a href="${sponsor.website}" target="_blank">Siteye Git</a>
+    ${countdownHTML}
+  `;
+
+  sponsorContainer.appendChild(card);
+
+  const countdownEl = document.getElementById(`countdown-${index}`);
+  const activeEl = document.getElementById(`active-${index}`);
+
+  const updateCountdown = () => {
+    const timeLeft = endTime - Date.now();
+    if (timeLeft <= 0) {
+      countdownEl.style.display = "none";
+      activeEl.style.display = "block";
+      clearInterval(timer);
+    } else {
+      countdownEl.textContent = `Kalan: ${Math.ceil(timeLeft / 1000)} sn`;
+    }
+  };
+
+  updateCountdown();
+  const timer = setInterval(updateCountdown, 1000);
+});
         sponsorsSlider.innerHTML = '';
         
         sponsors.forEach(sponsor => {
