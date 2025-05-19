@@ -366,5 +366,20 @@ body.dark-mode .contract-link a {
 body.dark-mode .contract-link a:hover {
     background-color: #1a252f;
 }
-
+.button {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 12px 24px;
+  font-size: 18px;
+  color: white;
+  background: linear-gradient(45deg, #ff416c, #ff4b2b);
+  text-decoration: none;
+  border-radius: 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+.button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
 /* ... diğer stiller ... */
