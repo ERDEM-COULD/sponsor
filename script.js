@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
     const showRegister = document.getElementById('showRegister');
+    const showLogin = document.getElementById('showLogin');
     const applyBtn = document.getElementById('applyBtn');
     const backBtn = document.getElementById('backBtn');
     const settingsBtn = document.getElementById('settingsBtn');
@@ -18,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const printApplicationBtn = document.getElementById('printApplicationBtn');
     const applicationInfo = document.getElementById('applicationInfo');
     const sponsorsSlider = document.querySelector('.sponsors-slider');
+    const darkModeToggle = document.getElementById('darkModeToggle');
     
     // Close buttons
     const closeButtons = document.querySelectorAll('.close');
@@ -33,48 +35,101 @@ document.addEventListener('DOMContentLoaded', function() {
         mainContent.style.display = 'block';
         loadSponsors();
         checkApplication();
+        if (currentUser.isAdmin) {
+            document.getElementById('adminPanelBtn').classList.remove('hidden');
+        }
+        initDarkMode();
     } else {
         authModal.style.display = 'block';
     }
     
-    // Event Listeners
+    // Form geçişleri
     showRegister.addEventListener('click', function(e) {
         e.preventDefault();
-        loginForm.style.display = 'none';
-        registerForm.style.display = 'flex';
+        toggleAuthForms();
     });
     
+    if (showLogin) {
+        showLogin.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleAuthForms();
+        });
+    }
+    
+    function toggleAuthForms() {
+        if (loginForm.style.display === 'none') {
+            loginForm.style.display = 'flex';
+            registerForm.style.display = 'none';
+            document.querySelector('#authModal p').textContent = 'Hesabınız yok mu? ';
+            const showRegisterLink = document.createElement('a');
+            showRegisterLink.href = '#';
+            showRegisterLink.textContent = 'Kayıt Ol';
+            showRegisterLink.id = 'showRegister';
+            document.querySelector('#authModal p').appendChild(showRegisterLink);
+            showRegisterLink.addEventListener('click', toggleAuthForms);
+        } else {
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'flex';
+            document.querySelector('#authModal p').textContent = 'Zaten bir hesabınız var mı? ';
+            const showLoginLink = document.createElement('a');
+            showLoginLink.href = '#';
+            showLoginLink.textContent = 'Giriş Yap';
+            showLoginLink.id = 'showLogin';
+            document.querySelector('#authModal p').appendChild(showLoginLink);
+            showLoginLink.addEventListener('click', toggleAuthForms);
+        }
+    }
+    
+    // Kapatma butonları
     closeButtons.forEach(button => {
         button.addEventListener('click', function() {
             this.closest('.modal').style.display = 'none';
         });
     });
     
+    // Dışarı tıklayarak kapatma
     window.addEventListener('click', function(e) {
         if (e.target === authModal || e.target === settingsModal) {
             e.target.style.display = 'none';
         }
     });
     
+    // Giriş formu
     loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
         const email = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
         
+        // Admin kontrolü
+        if (email === "merdem58171.3@gmail.com" && password === "ADMİNHGFD216789ADMİN") {
+            const adminUser = {
+                name: "Admin",
+                email: "merdem58171.3@gmail.com",
+                password: "ADMİNHGFD216789ADMİN",
+                isAdmin: true
+            };
+            localStorage.setItem('currentUser', JSON.stringify(adminUser));
+            location.reload();
+            return;
+        }
+        
         const users = JSON.parse(localStorage.getItem('users')) || [];
         const user = users.find(u => u.email === email && u.password === password);
         
         if (user) {
+            user.isAdmin = false;
             localStorage.setItem('currentUser', JSON.stringify(user));
             authModal.style.display = 'none';
             mainContent.style.display = 'block';
             loadSponsors();
             checkApplication();
+            initDarkMode();
         } else {
             alert('E-posta veya şifre hatalı!');
         }
     });
     
+    // Kayıt formu
     registerForm.addEventListener('submit', function(e) {
         e.preventDefault();
         const name = document.getElementById('registerName').value;
@@ -88,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        const newUser = { name, email, password };
+        const newUser = { name, email, password, isAdmin: false };
         users.push(newUser);
         localStorage.setItem('users', JSON.stringify(users));
         localStorage.setItem('currentUser', JSON.stringify(newUser));
@@ -96,8 +151,10 @@ document.addEventListener('DOMContentLoaded', function() {
         authModal.style.display = 'none';
         mainContent.style.display = 'block';
         loadSponsors();
+        initDarkMode();
     });
     
+    // Başvuru butonu
     applyBtn.addEventListener('click', function() {
         mainContent.style.display = 'none';
         applicationPage.style.display = 'block';
@@ -107,7 +164,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const userApplication = applications.find(app => app.email === currentUser.email);
         
         if (userApplication) {
-            // Fill the form with existing application data
             document.getElementById('firstName').value = userApplication.firstName;
             document.getElementById('lastName').value = userApplication.lastName;
             document.getElementById('phone').value = userApplication.phone;
@@ -121,16 +177,17 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('comments').value = userApplication.comments || '';
             document.getElementById('email').value = userApplication.email;
         } else {
-            // Pre-fill with user data
             document.getElementById('email').value = currentUser.email;
         }
     });
     
+    // Geri butonu
     backBtn.addEventListener('click', function() {
         applicationPage.style.display = 'none';
         mainContent.style.display = 'block';
     });
     
+    // Ayarlar butonu
     settingsBtn.addEventListener('click', function() {
         settingsModal.style.display = 'block';
         
@@ -139,11 +196,13 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('editEmail').value = currentUser.email;
     });
     
+    // Çıkış butonu
     logoutBtn.addEventListener('click', function() {
         localStorage.removeItem('currentUser');
         location.reload();
     });
     
+    // Hesap ayarları formu
     accountForm.addEventListener('submit', function(e) {
         e.preventDefault();
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -153,21 +212,20 @@ document.addEventListener('DOMContentLoaded', function() {
         const email = document.getElementById('editEmail').value || currentUser.email;
         const password = document.getElementById('editPassword').value || currentUser.password;
         
-        // Update user in users array
         const userIndex = users.findIndex(u => u.email === currentUser.email);
         if (userIndex !== -1) {
             users[userIndex] = { ...users[userIndex], name, email, password };
             localStorage.setItem('users', JSON.stringify(users));
         }
         
-        // Update current user
-        const updatedUser = { name, email, password };
+        const updatedUser = { name, email, password, isAdmin: currentUser.isAdmin };
         localStorage.setItem('currentUser', JSON.stringify(updatedUser));
         
         alert('Bilgileriniz güncellendi!');
         settingsModal.style.display = 'none';
     });
     
+    // Başvuru formu
     applicationForm.addEventListener('submit', function(e) {
         e.preventDefault();
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -189,15 +247,10 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         
         let applications = JSON.parse(localStorage.getItem('applications')) || [];
-        
-        // Remove old application if exists
         applications = applications.filter(app => app.email !== currentUser.email);
-        
-        // Add new application
         applications.push(application);
         localStorage.setItem('applications', JSON.stringify(applications));
         
-        // Redirect to mail with prefilled data
         const mailtoLink = `mailto:merdem58171.3@gmail.com?subject=Sponsorluk Başvurusu&body=
             İsim: ${application.firstName}%0D%0A
             Soyad: ${application.lastName}%0D%0A
@@ -215,22 +268,19 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         
         window.location.href = mailtoLink;
-        
-        // Go back to main page
         applicationPage.style.display = 'none';
         mainContent.style.display = 'block';
         checkApplication();
     });
     
+    // Tab butonları
     tabButtons.forEach(button => {
         button.addEventListener('click', function() {
             const tabId = this.getAttribute('data-tab');
             
-            // Update active tab button
             tabButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
             
-            // Update active tab content
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
             });
@@ -238,12 +288,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // Başvuru düzenleme
     editApplicationBtn.addEventListener('click', function() {
         settingsModal.style.display = 'none';
         mainContent.style.display = 'none';
         applicationPage.style.display = 'block';
     });
     
+    // Başvuru silme
     deleteApplicationBtn.addEventListener('click', function() {
         if (confirm('Başvurunuzu silmek istediğinize emin misiniz?')) {
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -259,6 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Başvuru yazdırma
     printApplicationBtn.addEventListener('click', function() {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         const applications = JSON.parse(localStorage.getItem('applications')) || [];
@@ -307,7 +360,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Slider navigation
+    // Slider navigasyon
     document.querySelector('.prev').addEventListener('click', function() {
         sponsorsSlider.scrollBy({ left: -300, behavior: 'smooth' });
     });
@@ -316,96 +369,194 @@ document.addEventListener('DOMContentLoaded', function() {
         sponsorsSlider.scrollBy({ left: 300, behavior: 'smooth' });
     });
     
-    // Functions
+    // Dark Mode
+    function initDarkMode() {
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.checked = true;
+        }
+        
+        darkModeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+    }
+    
+    // Sponsor slider sürükleme
+    function initSponsorSliderDrag() {
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        sponsorsSlider.addEventListener('mousedown', (e) => {
+            isDown = true;
+            sponsorsSlider.style.cursor = 'grabbing';
+            startX = e.pageX - sponsorsSlider.offsetLeft;
+            scrollLeft = sponsorsSlider.scrollLeft;
+        });
+
+        sponsorsSlider.addEventListener('mouseleave', () => {
+            isDown = false;
+            sponsorsSlider.style.cursor = 'grab';
+        });
+
+        sponsorsSlider.addEventListener('mouseup', () => {
+            isDown = false;
+            sponsorsSlider.style.cursor = 'grab';
+        });
+
+        sponsorsSlider.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - sponsorsSlider.offsetLeft;
+            const walk = (x - startX) * 2;
+            sponsorsSlider.scrollLeft = scrollLeft - walk;
+        });
+
+        // Touch events
+        sponsorsSlider.addEventListener('touchstart', (e) => {
+            isDown = true;
+            startX = e.touches[0].pageX - sponsorsSlider.offsetLeft;
+            scrollLeft = sponsorsSlider.scrollLeft;
+        });
+
+        sponsorsSlider.addEventListener('touchend', () => {
+            isDown = false;
+        });
+
+        sponsorsSlider.addEventListener('touchmove', (e) => {
+            if (!isDown) return;
+            const x = e.touches[0].pageX - sponsorsSlider.offsetLeft;
+            const walk = (x - startX) * 2;
+            sponsorsSlider.scrollLeft = scrollLeft - walk;
+        });
+
+        // Mouse tekerleği
+        sponsorsSlider.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            sponsorsSlider.scrollLeft += e.deltaY;
+        });
+    }
+    
+    // Sponsorları yükle
     function loadSponsors() {
         const sponsors = [
             {
-                name: "Animatronik",
-                description: "En iyi 3d figür",
-                website: "https://web-site-belirtilmemiş",
-                imageFile: "logo.jpg"
-                
+                name: "TechCorp",
+                description: "Teknoloji çözümlerinde lider",
+                website: "https://techcorp.example.com",
+                imageFile: "sponsor1.jpg"
             },
-           
+            {
+                name: "InnoSoft",
+                description: "Yazılım geliştirmede yenilikçi",
+                website: "https://innosoft.example.com",
+                imageFile: "sponsor2.png"
+            },
+            {
+                name: "GreenEnergy",
+                description: "Sürdürülebilir enerji çözümleri",
+                website: "https://greenenergy.example.com",
+                imageFile: "sponsor3.jpg"
+            },
+            {
+                name: "EduFuture",
+                description: "Eğitim teknolojilerinde öncü",
+                website: "https://edufuture.example.com",
+                imageFile: "sponsor4.png"
+            },
+            {
+                name: "HealthPlus",
+                description: "Sağlık hizmetlerinde mükemmellik",
+                website: "https://healthplus.example.com",
+                imageFile: "sponsor5.jpg"
+            },
+            {
+                name: "FoodExpress",
+                description: "Hızlı ve sağlıklı yemek hizmeti",
+                website: "https://foodexpress.example.com",
+                imageFile: "sponsor6.png"
+            },
+            {
+                name: "TravelNow",
+                description: "Seyahat deneyimleriniz için",
+                website: "https://travelnow.example.com",
+                imageFile: "sponsor7.jpg"
+            },
+            {
+                name: "BuildRight",
+                description: "İnşaat sektöründe kalite",
+                website: "https://buildright.example.com",
+                imageFile: "sponsor8.png"
+            },
+            {
+                name: "FashionHub",
+                description: "Moda dünyasının merkezi",
+                website: "https://fashionhub.example.com",
+                imageFile: "sponsor9.jpg"
+            },
+            {
+                name: "AutoMasters",
+                description: "Otomotiv sektöründe uzman",
+                website: "https://automasters.example.com",
+                imageFile: "sponsor10.png"
+            }
         ];
-        const sponsorContainer = document.querySelector(".sponsors-slider");
-
-
-
-  card.innerHTML = `
-    <img src="${sponsor.imageFile}" alt="${sponsor.name}" class="sponsor-logo">
-    <h3>${sponsor.name}</h3>
-    <p>${sponsor.description}</p>
-    <a href="${sponsor.website}" target="_blank">Siteye Git</a>
-    ${countdownHTML}
-  `;
-
+        
         sponsorsSlider.innerHTML = '';
         
         sponsors.forEach(sponsor => {
             const card = document.createElement('div');
             card.className = 'sponsor-card';
             card.innerHTML = `
-                <img src="${sponsor.logo}" alt="${sponsor.name}" style="width:100%; margin-bottom:10px;">
+                <img src="${sponsor.imageFile}" alt="${sponsor.name}"
+                     onerror="this.onerror=null; this.src='https://via.placeholder.com/300x150?text=${sponsor.name.replace(' ', '+')}'"
+                     style="width:100%; height:150px; object-fit:cover; margin-bottom:10px;">
                 <h3>${sponsor.name}</h3>
                 <p>${sponsor.description}</p>
             `;
-            card.addEventListener('click', function() {
-                window.open(sponsor.website, '_blank');
-            });
+            card.addEventListener('click', () => window.open(sponsor.website, '_blank'));
             sponsorsSlider.appendChild(card);
         });
-    }
-    loginForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    
-    // Admin kontrolü
-    if (email === "merdem58171.3@gmail.com" && password === "ADMİNHGFD216789ADMİN") {
-        const adminUser = {
-            name: "Admin",
-            email: "merdem58171.3@gmail.com",
-            password: "ADMİNHGFD216789ADMİN",
-            isAdmin: true
-        };
-        localStorage.setItem('currentUser', JSON.stringify(adminUser));
-        authModal.style.display = 'none';
-        mainContent.style.display = 'block';
-        loadSponsors();
-        checkApplication();
-        addAdminFeatures(); // Admin özelliklerini ekle
-        return;
-    }
-    
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-    const user = users.find(u => u.email === email && u.password === password);
-    
-    if (user) {
-        user.isAdmin = false; // Normal kullanıcılar için admin değil
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        authModal.style.display = 'none';
-        mainContent.style.display = 'block';
-        loadSponsors();
-        checkApplication();
-    } else {
-        alert('E-posta veya şifre hatalı!');
-    }
-});
-
-// Yeni admin özellikleri fonksiyonu
-function addAdminFeatures() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    
-    if (currentUser.isAdmin) {
-        // Navbar'a admin butonu ekle
-        const nav = document.querySelector('nav div');
-        const adminBtn = document.createElement('button');
-        adminBtn.id = 'adminPanelBtn';
-        adminBtn.textContent = 'Admin Paneli';
-        nav.insertBefore(adminBtn, document.getElementById('settingsBtn'));
         
-        // Admin paneli modalı oluştur
+        initSponsorSliderDrag();
+    }
+    
+       // Başvuru kontrolü
+    function checkApplication() {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const applications = JSON.parse(localStorage.getItem('applications')) || [];
+        const application = applications.find(app => app.email === currentUser.email);
+        
+        if (application) {
+            applicationInfo.innerHTML = `
+                <p><strong>Başvuru Durumu:</strong> Gönderildi</p>
+                <p><strong>Başvuru Tarihi:</strong> ${application.date}</p>
+            `;
+            editApplicationBtn.classList.remove('hidden');
+            deleteApplicationBtn.classList.remove('hidden');
+            printApplicationBtn.classList.remove('hidden');
+        } else {
+            applicationInfo.innerHTML = '<p>Henüz başvuru yapılmamış.</p>';
+            editApplicationBtn.classList.add('hidden');
+            deleteApplicationBtn.classList.add('hidden');
+            printApplicationBtn.classList.add('hidden');
+        }
+    }
+
+    // Admin paneli
+    function initAdminPanel() {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser || !currentUser.isAdmin) return;
+
+        const adminBtn = document.getElementById('adminPanelBtn');
+        adminBtn.classList.remove('hidden');
+
         const adminModal = document.createElement('div');
         adminModal.id = 'adminModal';
         adminModal.className = 'modal';
@@ -445,15 +596,17 @@ function addAdminFeatures() {
             </div>
         `;
         document.body.appendChild(adminModal);
-        
-        // Admin paneli butonu event listener
-        adminBtn.addEventListener('click', function() {
+
+        adminBtn.addEventListener('click', () => {
             adminModal.style.display = 'block';
             loadAdminUsers();
             loadAdminApplications();
         });
-        
-        // Admin modal tabları
+
+        adminModal.querySelector('.close').addEventListener('click', () => {
+            adminModal.style.display = 'none';
+        });
+
         adminModal.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const tabId = this.getAttribute('data-tab');
@@ -467,324 +620,124 @@ function addAdminFeatures() {
                 adminModal.querySelector(`#${tabId}Tab`).classList.add('active');
             });
         });
+    }
+
+    // Admin kullanıcıları yükle
+    function loadAdminUsers() {
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const tbody = document.querySelector('#usersTable tbody');
+        tbody.innerHTML = '';
         
-        // Admin modal kapatma
-        adminModal.querySelector('.close').addEventListener('click', function() {
-            adminModal.style.display = 'none';
+        users.forEach(user => {
+            if (user.email !== "merdem58171.3@gmail.com") {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>
+                        <button class="delete-user" data-email="${user.email}">Sil</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            }
+        });
+        
+        document.querySelectorAll('.delete-user').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const email = this.getAttribute('data-email');
+                if (confirm(`${email} kullanıcısını silmek istediğinize emin misiniz?`)) {
+                    let users = JSON.parse(localStorage.getItem('users')) || [];
+                    users = users.filter(u => u.email !== email);
+                    localStorage.setItem('users', JSON.stringify(users));
+                    loadAdminUsers();
+                }
+            });
         });
     }
-}
 
-// Admin kullanıcıları yükleme fonksiyonu
-function loadAdminUsers() {
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-    const tbody = document.querySelector('#usersTable tbody');
-    tbody.innerHTML = '';
-    
-    users.forEach(user => {
-        if (user.email !== "merdem58171.3@gmail.com") { // Admini listeleme
+    // Admin başvuruları yükle
+    function loadAdminApplications() {
+        const applications = JSON.parse(localStorage.getItem('applications')) || [];
+        const tbody = document.querySelector('#applicationsTable tbody');
+        tbody.innerHTML = '';
+        
+        applications.forEach(app => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td>${user.name}</td>
-                <td>${user.email}</td>
+                <td>${app.firstName} ${app.lastName}</td>
+                <td>${app.company}</td>
+                <td>${app.date}</td>
                 <td>
-                    <button class="delete-user" data-email="${user.email}">Sil</button>
+                    <button class="view-application" data-email="${app.email}">Görüntüle</button>
+                    <button class="delete-application" data-email="${app.email}">Sil</button>
                 </td>
             `;
             tbody.appendChild(tr);
-        }
-    });
-    
-    // Kullanıcı silme butonları
-    document.querySelectorAll('.delete-user').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const email = this.getAttribute('data-email');
-            if (confirm(`${email} kullanıcısını silmek istediğinize emin misiniz?`)) {
-                let users = JSON.parse(localStorage.getItem('users')) || [];
-                users = users.filter(u => u.email !== email);
-                localStorage.setItem('users', JSON.stringify(users));
-                loadAdminUsers();
-            }
         });
-    });
-}
-
-// Admin başvuruları yükleme fonksiyonu
-function loadAdminApplications() {
-    const applications = JSON.parse(localStorage.getItem('applications')) || [];
-    const tbody = document.querySelector('#applicationsTable tbody');
-    tbody.innerHTML = '';
-    
-    applications.forEach(app => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${app.firstName} ${app.lastName}</td>
-            <td>${app.company}</td>
-            <td>${app.date}</td>
-            <td>
-                <button class="view-application" data-email="${app.email}">Görüntüle</button>
-                <button class="delete-application" data-email="${app.email}">Sil</button>
-            </td>
-        `;
-        tbody.appendChild(tr);
-    });
-    
-    // Başvuru görüntüleme butonları
-    document.querySelectorAll('.view-application').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const email = this.getAttribute('data-email');
-            const applications = JSON.parse(localStorage.getItem('applications')) || [];
-            const application = applications.find(app => app.email === email);
-            
-            if (application) {
-                alert(`
-                    İsim: ${application.firstName} ${application.lastName}
-                    Telefon: ${application.phone}
-                    Yaş: ${application.age}
-                    Okul: ${application.school}
-                    Konum: ${application.location}
-                    Şirket: ${application.company}
-                    Başvuru Tarihi: ${application.date}
-                `);
-            }
-        });
-    });
-    
-    // Başvuru silme butonları
-    document.querySelectorAll('.delete-application').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const email = this.getAttribute('data-email');
-            if (confirm(`${email} başvurusunu silmek istediğinize emin misiniz?`)) {
-                let applications = JSON.parse(localStorage.getItem('applications')) || [];
-                applications = applications.filter(app => app.email !== email);
-                localStorage.setItem('applications', JSON.stringify(applications));
-                loadAdminApplications();
-            }
-        });
-    });
-}
-    function checkApplication() {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        const applications = JSON.parse(localStorage.getItem('applications')) || [];
-        const application = applications.find(app => app.email === currentUser.email);
         
-        if (application) {
-            applicationInfo.innerHTML = `
-                <p><strong>Başvuru Durumu:</strong> Gönderildi</p>
-                <p><strong>Başvuru Tarihi:</strong> ${application.date}</p>
-            `;
-            editApplicationBtn.classList.remove('hidden');
-            deleteApplicationBtn.classList.remove('hidden');
-            printApplicationBtn.classList.remove('hidden');
-        } else {
-            applicationInfo.innerHTML = '<p>Henüz başvuru yapılmamış.</p>';
-            editApplicationBtn.classList.add('hidden');
-            deleteApplicationBtn.classList.add('hidden');
-            printApplicationBtn.classList.add('hidden');
-        }
-    }
-});
-// ... önceki kodlar aynı ...
-
-// Giriş/Kayıt formu geçişleri
-showRegister.addEventListener('click', function(e) {
-    e.preventDefault();
-    loginForm.style.display = 'none';
-    registerForm.style.display = 'flex';
-    document.querySelector('#authModal p').textContent = 'Zaten bir hesabınız var mı? ';
-    const showLogin = document.createElement('a');
-    showLogin.href = '#';
-    showLogin.textContent = 'Giriş Yap';
-    showLogin.id = 'showLogin';
-    document.querySelector('#authModal p').appendChild(showLogin);
-    
-    showLogin.addEventListener('click', function(e) {
-        e.preventDefault();
-        registerForm.style.display = 'none';
-        loginForm.style.display = 'flex';
-        document.querySelector('#authModal p').textContent = 'Hesabınız yok mu? ';
-        const showRegisterLink = document.createElement('a');
-        showRegisterLink.href = '#';
-        showRegisterLink.textContent = 'Kayıt Ol';
-        showRegisterLink.id = 'showRegister';
-        document.querySelector('#authModal p').appendChild(showRegisterLink);
-        
-        showRegisterLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            loginForm.style.display = 'none';
-            registerForm.style.display = 'flex';
-            document.querySelector('#authModal p').textContent = 'Zaten bir hesabınız var mı? ';
-            const showLoginAgain = document.createElement('a');
-            showLoginAgain.href = '#';
-            showLoginAgain.textContent = 'Giriş Yap';
-            showLoginAgain.id = 'showLogin';
-            document.querySelector('#authModal p').appendChild(showLoginAgain);
-            showLoginAgain.addEventListener('click', e => {
-                e.preventDefault();
-                registerForm.style.display = 'none';
-                loginForm.style.display = 'flex';
-                document.querySelector('#authModal p').textContent = 'Hesabınız yok mu? ';
-                document.querySelector('#authModal p').appendChild(showRegisterLink);
+        document.querySelectorAll('.view-application').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const email = this.getAttribute('data-email');
+                const applications = JSON.parse(localStorage.getItem('applications')) || [];
+                const application = applications.find(app => app.email === email);
+                
+                if (application) {
+                    alert(`
+                        İsim: ${application.firstName} ${application.lastName}
+                        Telefon: ${application.phone}
+                        Yaş: ${application.age}
+                        Okul: ${application.school}
+                        Konum: ${application.location}
+                        Şirket: ${application.company}
+                        Başvuru Tarihi: ${application.date}
+                    `);
+                }
             });
         });
-    });
-});
-
-// Dark Mode Fonksiyonu
-function initDarkMode() {
-    const darkModeToggle = document.createElement('label');
-    darkModeToggle.className = 'switch';
-    darkModeToggle.innerHTML = `
-        <input type="checkbox" id="darkModeToggle">
-        <span class="slider"></span>
-    `;
-    document.querySelector('nav div').prepend(darkModeToggle);
-    
-    const darkModeToggleCheckbox = document.getElementById('darkModeToggle');
-    
-    // LocalStorage'dan dark mode durumunu yükle
-    if (localStorage.getItem('darkMode') === 'enabled') {
+        // Dark mode değişikliği olduğunda sözleşme linkini de güncelle
+darkModeToggle.addEventListener('change', function() {
+    if (this.checked) {
         document.body.classList.add('dark-mode');
-        darkModeToggleCheckbox.checked = true;
+        localStorage.setItem('darkMode', 'enabled');
+    } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', 'disabled');
     }
     
-    // Dark mode toggle event listener
-    darkModeToggleCheckbox.addEventListener('change', function() {
-        if (this.checked) {
-            document.body.classList.add('dark-mode');
-            localStorage.setItem('darkMode', 'enabled');
-        } else {
-            document.body.classList.remove('dark-mode');
-            localStorage.setItem('darkMode', 'disabled');
-        }
-    });
-}
-
-// Sponsor slider için sürükleme özelliği
-function initSponsorSliderDrag() {
-    const slider = document.querySelector('.sponsors-slider');
-    let isDown = false;
-    let startX;
-    let scrollLeft;
-
-    slider.addEventListener('mousedown', (e) => {
-        isDown = true;
-        slider.style.cursor = 'grabbing';
-        startX = e.pageX - slider.offsetLeft;
-        scrollLeft = slider.scrollLeft;
-    });
-
-    slider.addEventListener('mouseleave', () => {
-        isDown = false;
-        slider.style.cursor = 'grab';
-    });
-
-    slider.addEventListener('mouseup', () => {
-        isDown = false;
-        slider.style.cursor = 'grab';
-    });
-
-    slider.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
-        e.preventDefault();
-        const x = e.pageX - slider.offsetLeft;
-        const walk = (x - startX) * 2;
-        slider.scrollLeft = scrollLeft - walk;
-    });
-
-    // Touch events for mobile
-    slider.addEventListener('touchstart', (e) => {
-        isDown = true;
-        startX = e.touches[0].pageX - slider.offsetLeft;
-        scrollLeft = slider.scrollLeft;
-    });
-
-    slider.addEventListener('touchend', () => {
-        isDown = false;
-    });
-
-    slider.addEventListener('touchmove', (e) => {
-        if (!isDown) return;
-        const x = e.touches[0].pageX - slider.offsetLeft;
-        const walk = (x - startX) * 2;
-        slider.scrollLeft = scrollLeft - walk;
-    });
-}
-
-// Sayfa yüklendiğinde
-document.addEventListener('DOMContentLoaded', function() {
-    // ... önceki kodlar aynı ...
-    
-    // Yeni fonksiyonları çağır
-    initDarkMode();
-    initSponsorSliderDrag();
-    
-    // Slider için grab cursor
-    document.querySelector('.sponsors-slider').style.cursor = 'grab';
+    // Sözleşme linkinin rengini güncelle
+    updateContractLinkStyle();
 });
 
-// ... diğer fonksiyonlar aynı ...
-// script.js dosyasında initSponsorSliderDrag fonksiyonunu güncelleyin:
-
-function initSponsorSliderDrag() {
-    const slider = document.querySelector('.sponsors-slider');
-    let isDown = false;
-    let startX;
-    let scrollLeft;
-
-    // Mouse ile sürükleme
-    slider.addEventListener('mousedown', (e) => {
-        isDown = true;
-        slider.style.cursor = 'grabbing';
-        startX = e.pageX - slider.offsetLeft;
-        scrollLeft = slider.scrollLeft;
-    });
-
-    slider.addEventListener('mouseleave', () => {
-        isDown = false;
-        slider.style.cursor = 'grab';
-    });
-
-    slider.addEventListener('mouseup', () => {
-        isDown = false;
-        slider.style.cursor = 'grab';
-    });
-
-    slider.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
-        e.preventDefault();
-        const x = e.pageX - slider.offsetLeft;
-        const walk = (x - startX) * 2;
-        slider.scrollLeft = scrollLeft - walk;
-    });
-
-    // Touch events for mobile
-    slider.addEventListener('touchstart', (e) => {
-        isDown = true;
-        startX = e.touches[0].pageX - slider.offsetLeft;
-        scrollLeft = slider.scrollLeft;
-    });
-
-    slider.addEventListener('touchend', () => {
-        isDown = false;
-    });
-
-    slider.addEventListener('touchmove', (e) => {
-        if (!isDown) return;
-        const x = e.touches[0].pageX - slider.offsetLeft;
-        const walk = (x - startX) * 10;
-        slider.scrollLeft = scrollLeft - walk;
-    });
- document.addEventListener("DOMContentLoaded", () => {
-  const countdownElements = document.querySelectorAll(".countdown");
-
-
-    // Mouse tekerleği ile kaydırma
-    slider.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        slider.scrollLeft += e.deltaY;
-    });
-
-    // Slider için grab cursor
-    slider.style.cursor = 'grab';
+// Sayfa yüklendiğinde sözleşme linki stilini ayarla
+function updateContractLinkStyle() {
+    const contractLink = document.querySelector('.contract-link a');
+    if (document.body.classList.contains('dark-mode')) {
+        contractLink.style.backgroundColor = '#2c3e50';
+    } else {
+        contractLink.style.backgroundColor = '#3498db';
+    }
 }
+
+// Sayfa yüklendiğinde çağır
+document.addEventListener('DOMContentLoaded', function() {
+    // ... diğer kodlar ...
+    updateContractLinkStyle();
+});
+        document.querySelectorAll('.delete-application').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const email = this.getAttribute('data-email');
+                if (confirm(`${email} başvurusunu silmek istediğinize emin misiniz?`)) {
+                    let applications = JSON.parse(localStorage.getItem('applications')) || [];
+                    applications = applications.filter(app => app.email !== email);
+                    localStorage.setItem('applications', JSON.stringify(applications));
+                    loadAdminApplications();
+                }
+            });
+        });
+    }
+
+    // Sayfa yüklendiğinde çalıştırılacak fonksiyonlar
+    if (currentUser) {
+        initAdminPanel();
+    }
+});
