@@ -11,6 +11,26 @@ body {
     line-height: 1.6;
 }
 
+/* Dark Mode */
+body.dark-mode {
+    background-color: #121212;
+    color: #f5f5f5;
+}
+
+body.dark-mode .modal-content,
+body.dark-mode .sponsor-card,
+body.dark-mode #applicationInfo {
+    background-color: #1e1e1e;
+    color: #f5f5f5;
+}
+
+body.dark-mode input,
+body.dark-mode textarea {
+    background-color: #333;
+    color: #f5f5f5;
+    border-color: #444;
+}
+
 header {
     background-color: #2c3e50;
     color: white;
@@ -110,6 +130,8 @@ textarea {
     gap: 1rem;
     padding: 1rem 0;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    cursor: grab;
 }
 
 .sponsor-card {
@@ -124,6 +146,19 @@ textarea {
 
 .sponsor-card:hover {
     transform: translateY(-5px);
+}
+
+.sponsor-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background-color: #f5f5f5;
+}
+
+body.dark-mode .sponsor-card img {
+    background-color: #333;
 }
 
 .slider-btn {
@@ -185,6 +220,10 @@ textarea {
     color: #2c3e50;
 }
 
+body.dark-mode .tab-btn.active {
+    color: #f5f5f5;
+}
+
 .tab-content {
     display: none;
 }
@@ -224,95 +263,8 @@ textarea {
     background: #f9f9f9;
     border-radius: 4px;
 }
-#adminPanelBtn {
-    background-color: #e74c3c;
-    margin-right: 10px;
-}
 
-#adminPanelBtn:hover {
-    background-color: #c0392b;
-}
-
-#usersTable, #applicationsTable {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-#usersTable th, #usersTable td,
-#applicationsTable th, #applicationsTable td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-#usersTable th, #applicationsTable th {
-    background-color: #2c3e50;
-    color: white;
-}
-
-.delete-user, .delete-application {
-    background-color: #e74c3c;
-    padding: 5px 10px;
-    font-size: 0.8rem;
-}
-
-.view-application {
-    background-color: #3498db;
-    padding: 5px 10px;
-    font-size: 0.8rem;
-    margin-right: 5px;
-}
-/* ... önceki stiller aynı ... */
-
-/* Dark Mode */
-body.dark-mode {
-    background-color: #121212;
-    color: #f5f5f5;
-}
-
-body.dark-mode .modal-content,
-body.dark-mode .sponsor-card,
-body.dark-mode #applicationInfo {
-    background-color: #1e1e1e;
-    color: #f5f5f5;
-}
-
-body.dark-mode input,
-body.dark-mode textarea {
-    background-color: #333;
-    color: #f5f5f5;
-    border-color: #444;
-}
-
-/* Kaydırma için scrollbar */
-.sponsors-slider {
-    scrollbar-width: thin;
-    scrollbar-color: #3498db #f5f5f5;
-}
-
-body.dark-mode .sponsors-slider {
-    scrollbar-color: #3498db #333;
-}
-
-.sponsors-slider::-webkit-scrollbar {
-    height: 8px;
-}
-
-.sponsors-slider::-webkit-scrollbar-track {
-    background: #f5f5f5;
-}
-
-body.dark-mode .sponsors-slider::-webkit-scrollbar-track {
-    background: #333;
-}
-
-.sponsors-slider::-webkit-scrollbar-thumb {
-    background-color: #3498db;
-    border-radius: 4px;
-}
-
-/* Switch için dark mode butonu */
+/* Dark Mode Toggle */
 .switch {
     position: relative;
     display: inline-block;
@@ -359,5 +311,60 @@ input:checked + .slider:before {
     transform: translateX(26px);
 }
 
-/* ... diğer stiller aynı ... */
+/* Admin Panel */
+#adminPanelBtn {
+    background-color: #e74c3c;
+    margin-right: 10px;
+}
 
+#adminPanelBtn:hover {
+    background-color: #c0392b;
+}
+
+/* Scrollbar */
+.sponsors-slider::-webkit-scrollbar {
+    height: 8px;
+}
+
+.sponsors-slider::-webkit-scrollbar-track {
+    background: #f5f5f5;
+}
+
+body.dark-mode .sponsors-slider::-webkit-scrollbar-track {
+    background: #333;
+}
+
+.sponsors-slider::-webkit-scrollbar-thumb {
+    background-color: #3498db;
+    border-radius: 4px;
+}
+/* ... diğer stiller ... */
+
+.contract-link {
+    margin: 0 15px;
+}
+
+.contract-link a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 12px;
+    border-radius: 4px;
+    background-color: #3498db;
+    transition: background-color 0.3s;
+}
+
+.contract-link a:hover {
+    background-color: #2980b9;
+    text-decoration: underline;
+}
+
+body.dark-mode .contract-link a {
+    background-color: #2c3e50;
+}
+
+body.dark-mode .contract-link a:hover {
+    background-color: #1a252f;
+}
+
+/* ... diğer stiller ... */
