@@ -340,25 +340,6 @@ document.addEventListener('DOMContentLoaded', function() {
     ${countdownHTML}
   `;
 
-  sponsorContainer.appendChild(card);
-
-  const countdownEl = document.getElementById(`countdown-${index}`);
-  const activeEl = document.getElementById(`active-${index}`);
-
-  const updateCountdown = () => {
-    const timeLeft = endTime - Date.now();
-    if (timeLeft <= 0) {
-      countdownEl.style.display = "none";
-      activeEl.style.display = "block";
-      clearInterval(timer);
-    } else {
-      countdownEl.textContent = `Kalan: ${Math.ceil(timeLeft / 1000)} sn`;
-    }
-  };
-
-  updateCountdown();
-  const timer = setInterval(updateCountdown, 1000);
-});
         sponsorsSlider.innerHTML = '';
         
         sponsors.forEach(sponsor => {
