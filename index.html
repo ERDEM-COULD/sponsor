@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-
-    <meta name="color-scheme" content="light dark">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sponsorluk Projesi</title>
@@ -26,6 +24,7 @@
                 <input type="email" id="registerEmail" placeholder="E-posta" required>
                 <input type="password" id="registerPassword" placeholder="Şifre" required>
                 <button type="submit">Kayıt Ol</button>
+                <p>Zaten bir hesabınız var mı? <a href="#" id="showLogin">Giriş Yap</a></p>
             </form>
         </div>
     </div>
@@ -36,8 +35,17 @@
             <nav>
                 <h1>Sponsorluk Platformu</h1>
                 <div>
+                    <label class="switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="slider"></span>
+                    </label>
+                    <button id="adminPanelBtn" class="hidden">Admin Paneli</button>
+                    <div class="contract-link">
+                        <a href="https://erdem-could.github.io/Sozlesme" target="_blank">Sözleşme</a>
+                    </div>
                     <button id="settingsBtn">Ayarlar</button>
                     <button id="logoutBtn">Çıkış Yap</button>
+                    
                 </div>
             </nav>
         </header>
@@ -47,7 +55,7 @@
                 <h2>Sponsorlar</h2>
                 <div class="sponsors-container">
                     <div class="sponsors-slider">
-                        <!-- Sponsor kartları buraya eklenecek -->
+                        <!-- Sponsor kartları script.js ile yüklenecek -->
                     </div>
                     <button class="slider-btn prev">❮</button>
                     <button class="slider-btn next">❯</button>
@@ -164,9 +172,9 @@
             </form>
         </main>
     </div>
-    <div class="project">
-            <h3><a href="https://erdem-could.github.io/Sozlesme" target="_blank">Sözleşmeyi kabul etmek için butona tıklayınız.</a></h3>
-    </div>
+   
+    <!-- Admin Modal (JS ile eklenecek) -->
+
     <script src="script.js"></script>
 </body>
 </html>
