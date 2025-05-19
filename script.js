@@ -447,65 +447,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function loadSponsors() {
         const sponsors = [
             {
-                name: "TechCorp",
-                description: "Teknoloji çözümlerinde lider",
+                name: "Animatronik",
+                description: "3d tasarımda 1 numara",
                 website: "https://techcorp.example.com",
-                imageFile: "sponsor1.jpg"
+                imageFile: "logo.jpg"
             },
-            {
-                name: "InnoSoft",
-                description: "Yazılım geliştirmede yenilikçi",
-                website: "https://innosoft.example.com",
-                imageFile: "sponsor2.png"
-            },
-            {
-                name: "GreenEnergy",
-                description: "Sürdürülebilir enerji çözümleri",
-                website: "https://greenenergy.example.com",
-                imageFile: "sponsor3.jpg"
-            },
-            {
-                name: "EduFuture",
-                description: "Eğitim teknolojilerinde öncü",
-                website: "https://edufuture.example.com",
-                imageFile: "sponsor4.png"
-            },
-            {
-                name: "HealthPlus",
-                description: "Sağlık hizmetlerinde mükemmellik",
-                website: "https://healthplus.example.com",
-                imageFile: "sponsor5.jpg"
-            },
-            {
-                name: "FoodExpress",
-                description: "Hızlı ve sağlıklı yemek hizmeti",
-                website: "https://foodexpress.example.com",
-                imageFile: "sponsor6.png"
-            },
-            {
-                name: "TravelNow",
-                description: "Seyahat deneyimleriniz için",
-                website: "https://travelnow.example.com",
-                imageFile: "sponsor7.jpg"
-            },
-            {
-                name: "BuildRight",
-                description: "İnşaat sektöründe kalite",
-                website: "https://buildright.example.com",
-                imageFile: "sponsor8.png"
-            },
-            {
-                name: "FashionHub",
-                description: "Moda dünyasının merkezi",
-                website: "https://fashionhub.example.com",
-                imageFile: "sponsor9.jpg"
-            },
-            {
-                name: "AutoMasters",
-                description: "Otomotiv sektöründe uzman",
-                website: "https://automasters.example.com",
-                imageFile: "sponsor10.png"
-            }
+           
         ];
         
         sponsorsSlider.innerHTML = '';
