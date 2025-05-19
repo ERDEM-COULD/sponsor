@@ -158,6 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyBtn.addEventListener('click', function() {
         mainContent.style.display = 'none';
         applicationPage.style.display = 'block';
+        alert("DİKKAT! Eğer sözleşmeyi kabul etmediyseniz başvurunuz, sözleşme formu mailimize ulaşana dek kabul edilmeyecek! Sözleşmeyi kabul etmek için https://erdem-could.github.io/Sozlesme");
         
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         const applications = JSON.parse(localStorage.getItem('applications')) || [];
