@@ -763,6 +763,39 @@ function initSponsorSliderDrag() {
         const walk = (x - startX) * 10;
         slider.scrollLeft = scrollLeft - walk;
     });
+ document.addEventListener("DOMContentLoaded", () => {
+  const countdownElements = document.querySelectorAll(".countdown");
+
+  countdownElements.forEach((el) => {
+    const timerId = el.dataset.timerId;
+    const localStorageKey = `sponsorshipTimer_${timerId}`;
+    const activeMessage = el.nextElementSibling;
+
+    let endTime = localStorage.getItem(localStorageKey);
+
+    if (!endTime) {
+      endTime = Date.now() + 10000; // 10 saniye test süresi
+      localStorage.setItem(localStorageKey, endTime);
+    } else {
+      endTime = parseInt(endTime);
+    }
+
+    const updateCountdown = () => {
+      const timeLeft = endTime - Date.now();
+
+      if (timeLeft <= 0) {
+        el.style.display = "none";
+        activeMessage.style.display = "block";
+        clearInterval(interval);
+      } else {
+        el.textContent = Math.ceil(timeLeft / 1000);
+      }
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+  });
+});
 
     // Mouse tekerleği ile kaydırma
     slider.addEventListener('wheel', (e) => {
