@@ -463,7 +463,7 @@ document.addEventListener('DOMContentLoaded', function() {
             card.innerHTML = `
                 <img src="${sponsor.imageFile}" alt="${sponsor.name}"
                      onerror="this.onerror=null; this.src='https://via.placeholder.com/300x150?text=${sponsor.name.replace(' ', '+')}'"
-                     style="width:100%; height:150px; object-fit:cover; margin-bottom:10px;">
+                     style="width:75%; height:125px; object-fit:cover; margin-bottom:10px;">
                 <h3>${sponsor.name}</h3>
                 <p>${sponsor.description}</p>
             `;
