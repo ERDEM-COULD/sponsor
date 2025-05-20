@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sponsorluk Projesi</title>
     <link rel="stylesheet" href="style.css">
+    <meta name="color-scheme" content="light dark">
 </head>
 <body>
     <!-- Giriş/Kayıt Modal -->
@@ -32,11 +33,10 @@
     <!-- Ana Sayfa -->
     <div id="mainContent" style="display: none;">
         <header>
-            <div class="contract-link">
+             <div class="contract-link">
                         <a href="https://erdem-could.github.io/Sozlesme" target="_blank">Sözleşme</a>
-            </div>
-            <a href="anlatım.html" class="button">Nasıl yapacağını öğren!</a>
-
+             </div>
+               <a href="anlatım.html" class="button">Nasıl yapacağını öğren!</a>
             <nav>
                 <h1>Sponsorluk Platformu</h1>
                 <div>
@@ -48,7 +48,6 @@
                     <button id="adminPanelBtn" class="hidden">Admin Paneli</button>
                     <button id="settingsBtn">Ayarlar</button>
                     <button id="logoutBtn">Çıkış Yap</button>
-                    
                 </div>
             </nav>
         </header>
@@ -99,7 +98,7 @@
             </div>
         </div>
     </div>
-               
+
     <!-- Başvuru Sayfası -->
     <div id="applicationPage" style="display: none;">
         <header>
@@ -160,6 +159,25 @@
                     <label for="postalCode">Posta Kodu*</label>
                     <input type="text" id="postalCode" required>
                 </div>
+
+                <div class="social-input-group">
+                    <div class="form-group">
+                        <label for="youtube">YouTube Linki</label>
+                        <input type="url" id="youtube" placeholder="https://youtube.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label for="facebook">Facebook Linki</label>
+                        <input type="url" id="facebook" placeholder="https://facebook.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label for="x">X (Twitter) Linki</label>
+                        <input type="url" id="x" placeholder="https://x.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label for="instagram">Instagram Linki</label>
+                        <input type="url" id="instagram" placeholder="https://instagram.com/...">
+                    </div>
+                </div>
                 
                 <div class="form-group">
                     <label for="comments">Bizimle Paylaşmak İstedikleriniz</label>
@@ -170,14 +188,13 @@
                     <label for="email">E-posta*</label>
                     <input type="email" id="email" required>
                 </div>
-               
+                 <div class="contract-link">
+                        <a href="https://erdem-could.github.io/Sozlesme" target="_blank">Sözleşme</a>
+                    </div>
                 <button type="submit" class="submit-btn">Başvuruyu Gönder</button>
             </form>
-            
         </main>
     </div>
-   
-    <!-- Admin Modal (JS ile eklenecek) -->
 
     <script src="script.js"></script>
 </body>
