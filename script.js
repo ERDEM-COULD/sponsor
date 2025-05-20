@@ -416,8 +416,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const sponsors = [
             {
                 name: "Animatronik",
-                description: "Korku 3d tasarımında 1.sırada",
-                website: "https://Yok",
+                description: "3d korkuda 1.sırada",
+                website: "",
                 imageFile: "logo.jpg",
                 social: {
                     youtube: "https://youtube.com/@tavsanmc?si=0_Rg1_tu-oQVVfNj",
@@ -427,8 +427,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             },
             
-            
-            }
         ];
         
         sponsorsSlider.innerHTML = '';
