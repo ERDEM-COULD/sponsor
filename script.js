@@ -415,124 +415,19 @@ document.addEventListener('DOMContentLoaded', function() {
     function loadSponsors() {
         const sponsors = [
             {
-                name: "TechCorp",
-                description: "Teknoloji çözümlerinde lider",
-                website: "https://techcorp.example.com",
-                imageFile: "sponsor1.jpg",
+                name: "Animatronik",
+                description: "Korku 3d tasarımında 1.sırada",
+                website: "https://Yok",
+                imageFile: "logo.jpg",
                 social: {
-                    youtube: "https://youtube.com/techcorp",
-                    facebook: "https://facebook.com/techcorp",
-                    x: "https://x.com/techcorp",
-                    instagram: "https://instagram.com/techcorp"
+                    youtube: "https://youtube.com/@tavsanmc?si=0_Rg1_tu-oQVVfNj",
+                    facebook: "",
+                    x: "",
+                    instagram: ""
                 }
             },
-            {
-                name: "InnoSoft",
-                description: "Yazılım geliştirmede yenilikçi",
-                website: "https://innosoft.example.com",
-                imageFile: "sponsor2.png",
-                social: {
-                    youtube: "https://youtube.com/innosoft",
-                    facebook: null,
-                    x: "https://x.com/innosoft",
-                    instagram: "https://instagram.com/innosoft"
-                }
-            },
-            {
-                name: "GreenEnergy",
-                description: "Sürdürülebilir enerji çözümleri",
-                website: "https://greenenergy.example.com",
-                imageFile: "sponsor3.jpg",
-                social: {
-                    youtube: "https://youtube.com/greenenergy",
-                    facebook: "https://facebook.com/greenenergy",
-                    x: "https://x.com/greenenergy",
-                    instagram: "https://instagram.com/greenenergy"
-                }
-            },
-            {
-                name: "EduFuture",
-                description: "Eğitim teknolojilerinde öncü",
-                website: "https://edufuture.example.com",
-                imageFile: "sponsor4.png",
-                social: {
-                    youtube: "https://youtube.com/edufuture",
-                    facebook: "https://facebook.com/edufuture",
-                    x: "https://x.com/edufuture",
-                    instagram: "https://instagram.com/edufuture"
-                }
-            },
-            {
-                name: "HealthPlus",
-                description: "Sağlık hizmetlerinde mükemmellik",
-                website: "https://healthplus.example.com",
-                imageFile: "sponsor5.jpg",
-                social: {
-                    youtube: "https://youtube.com/healthplus",
-                    facebook: "https://facebook.com/healthplus",
-                    x: "https://x.com/healthplus",
-                    instagram: "https://instagram.com/healthplus"
-                }
-            },
-            {
-                name: "FoodExpress",
-                description: "Hızlı ve sağlıklı yemek hizmeti",
-                website: "https://foodexpress.example.com",
-                imageFile: "sponsor6.png",
-                social: {
-                    youtube: "https://youtube.com/foodexpress",
-                    facebook: "https://facebook.com/foodexpress",
-                    x: "https://x.com/foodexpress",
-                    instagram: "https://instagram.com/foodexpress"
-                }
-            },
-            {
-                name: "TravelNow",
-                description: "Seyahat deneyimleriniz için",
-                website: "https://travelnow.example.com",
-                imageFile: "sponsor7.jpg",
-                social: {
-                    youtube: "https://youtube.com/travelnow",
-                    facebook: "https://facebook.com/travelnow",
-                    x: "https://x.com/travelnow",
-                    instagram: "https://instagram.com/travelnow"
-                }
-            },
-            {
-                name: "BuildRight",
-                description: "İnşaat sektöründe kalite",
-                website: "https://buildright.example.com",
-                imageFile: "sponsor8.png",
-                social: {
-                    youtube: "https://youtube.com/buildright",
-                    facebook: "https://facebook.com/buildright",
-                    x: "https://x.com/buildright",
-                    instagram: "https://instagram.com/buildright"
-                }
-            },
-            {
-                name: "FashionHub",
-                description: "Moda dünyasının merkezi",
-                website: "https://fashionhub.example.com",
-                imageFile: "sponsor9.jpg",
-                social: {
-                    youtube: "https://youtube.com/fashionhub",
-                    facebook: "https://facebook.com/fashionhub",
-                    x: "https://x.com/fashionhub",
-                    instagram: "https://instagram.com/fashionhub"
-                }
-            },
-            {
-                name: "AutoMasters",
-                description: "Otomotiv sektöründe uzman",
-                website: "https://automasters.example.com",
-                imageFile: "sponsor10.png",
-                social: {
-                    youtube: "https://youtube.com/automasters",
-                    facebook: "https://facebook.com/automasters",
-                    x: "https://x.com/automasters",
-                    instagram: "https://instagram.com/automasters"
-                }
+            
+            
             }
         ];
         
