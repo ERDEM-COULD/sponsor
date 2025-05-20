@@ -142,6 +142,8 @@ textarea {
     padding: 1rem;
     cursor: pointer;
     transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
 }
 
 .sponsor-card:hover {
@@ -159,6 +161,43 @@ textarea {
 
 body.dark-mode .sponsor-card img {
     background-color: #333;
+}
+
+/* Sosyal Medya Butonları */
+.social-links {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.social-links a {
+    color: white;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s;
+}
+
+.social-links a:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+.social-links a i {
+    font-style: normal;
+}
+
+.youtube { background-color: #FF0000; }
+.facebook { background-color: #1877F2; }
+.x { background-color: #000000; }
+.instagram { 
+    background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
 }
 
 .slider-btn {
@@ -234,6 +273,13 @@ body.dark-mode .tab-btn.active {
 
 .form-group {
     margin-bottom: 1rem;
+}
+
+.social-input-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 15px;
 }
 
 .form-group label {
@@ -321,6 +367,34 @@ input:checked + .slider:before {
     background-color: #c0392b;
 }
 
+/* Sözleşme Linki */
+.contract-link {
+    margin: 0 15px;
+}
+
+.contract-link a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 12px;
+    border-radius: 4px;
+    background-color: #3498db;
+    transition: all 0.3s;
+}
+
+.contract-link a:hover {
+    background-color: #2980b9;
+    text-decoration: underline;
+}
+
+body.dark-mode .contract-link a {
+    background-color: #2c3e50;
+}
+
+body.dark-mode .contract-link a:hover {
+    background-color: #1a252f;
+}
+
 /* Scrollbar */
 .sponsors-slider::-webkit-scrollbar {
     height: 8px;
@@ -338,34 +412,28 @@ body.dark-mode .sponsors-slider::-webkit-scrollbar-track {
     background-color: #3498db;
     border-radius: 4px;
 }
-/* ... diğer stiller ... */
 
-.contract-link {
-    margin: 0 15px;
+@media (max-width: 768px) {
+    .sponsor-card {
+        min-width: 250px;
+    }
+    
+    nav > div {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .social-input-group {
+        grid-template-columns: 1fr;
+    }
+    
+    .contract-link {
+        order: -1;
+        width: 100%;
+        text-align: center;
+    }
 }
 
-.contract-link a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    padding: 8px 12px;
-    border-radius: 4px;
-    background-color: #3498db;
-    transition: background-color 0.3s;
-}
-
-.contract-link a:hover {
-    background-color: #2980b9;
-    text-decoration: underline;
-}
-
-body.dark-mode .contract-link a {
-    background-color: #2c3e50;
-}
-
-body.dark-mode .contract-link a:hover {
-    background-color: #1a252f;
-}
 .button {
   display: inline-block;
   margin-top: 20px;
@@ -382,4 +450,3 @@ body.dark-mode .contract-link a:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
-/* ... diğer stiller ... */
