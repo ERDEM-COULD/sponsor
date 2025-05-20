@@ -159,7 +159,6 @@ document.addEventListener('DOMContentLoaded', function() {
         mainContent.style.display = 'none';
         applicationPage.style.display = 'block';
         alert("DİKKAT! Eğer sözleşmeyi kabul etmediyseniz başvurunuz, sözleşme formu mailimize ulaşana dek kabul edilmeyecek! Sözleşmeyi kabul etmek için https://erdem-could.github.io/Sozlesme");
-        
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         const applications = JSON.parse(localStorage.getItem('applications')) || [];
         const userApplication = applications.find(app => app.email === currentUser.email);
@@ -177,6 +176,10 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('postalCode').value = userApplication.postalCode;
             document.getElementById('comments').value = userApplication.comments || '';
             document.getElementById('email').value = userApplication.email;
+            document.getElementById('youtube').value = userApplication.socialLinks?.youtube || '';
+            document.getElementById('facebook').value = userApplication.socialLinks?.facebook || '';
+            document.getElementById('x').value = userApplication.socialLinks?.x || '';
+            document.getElementById('instagram').value = userApplication.socialLinks?.instagram || '';
         } else {
             document.getElementById('email').value = currentUser.email;
         }
@@ -244,7 +247,13 @@ document.addEventListener('DOMContentLoaded', function() {
             postalCode: document.getElementById('postalCode').value,
             comments: document.getElementById('comments').value,
             email: document.getElementById('email').value,
-            date: new Date().toLocaleDateString()
+            date: new Date().toLocaleDateString(),
+            socialLinks: {
+                youtube: document.getElementById('youtube').value,
+                facebook: document.getElementById('facebook').value,
+                x: document.getElementById('x').value,
+                instagram: document.getElementById('instagram').value
+            }
         };
         
         let applications = JSON.parse(localStorage.getItem('applications')) || [];
@@ -263,6 +272,10 @@ document.addEventListener('DOMContentLoaded', function() {
             Şirket İsmi: ${application.company}%0D%0A
             Yardımcı İsmi: ${application.assistant}%0D%0A
             Posta Kodu: ${application.postalCode}%0D%0A
+            YouTube: ${application.socialLinks.youtube || 'Yok'}%0D%0A
+            Facebook: ${application.socialLinks.facebook || 'Yok'}%0D%0A
+            X: ${application.socialLinks.x || 'Yok'}%0D%0A
+            Instagram: ${application.socialLinks.instagram || 'Yok'}%0D%0A
             Yorumlar: ${application.comments || 'Yok'}%0D%0A
             E-posta: ${application.email}%0D%0A
             Başvuru Tarihi: ${application.date}
@@ -329,6 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             h1 { color: #2c3e50; margin-bottom: 20px; }
                             .info-item { margin-bottom: 10px; }
                             .label { font-weight: bold; }
+                            .social-links { margin-top: 15px; }
                         </style>
                     </head>
                     <body>
@@ -343,6 +357,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="info-item"><span class="label">Şirket İsmi:</span> ${application.company}</div>
                         <div class="info-item"><span class="label">Yardımcı İsmi:</span> ${application.assistant}</div>
                         <div class="info-item"><span class="label">Posta Kodu:</span> ${application.postalCode}</div>
+                        
+                        <div class="social-links">
+                            <p><strong>Sosyal Medya Bağlantıları:</strong></p>
+                            <div class="info-item"><span class="label">YouTube:</span> ${application.socialLinks?.youtube || 'Yok'}</div>
+                            <div class="info-item"><span class="label">Facebook:</span> ${application.socialLinks?.facebook || 'Yok'}</div>
+                            <div class="info-item"><span class="label">X:</span> ${application.socialLinks?.x || 'Yok'}</div>
+                            <div class="info-item"><span class="label">Instagram:</span> ${application.socialLinks?.instagram || 'Yok'}</div>
+                        </div>
+                        
                         <div class="info-item"><span class="label">Yorumlar:</span> ${application.comments || 'Yok'}</div>
                         <div class="info-item"><span class="label">E-posta:</span> ${application.email}</div>
                         <div class="info-item"><span class="label">Başvuru Tarihi:</span> ${application.date}</div>
@@ -388,6 +411,159 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Sponsor Yükleme Fonksiyonu
+    function loadSponsors() {
+        const sponsors = [
+            {
+                name: "TechCorp",
+                description: "Teknoloji çözümlerinde lider",
+                website: "https://techcorp.example.com",
+                imageFile: "sponsor1.jpg",
+                social: {
+                    youtube: "https://youtube.com/techcorp",
+                    facebook: "https://facebook.com/techcorp",
+                    x: "https://x.com/techcorp",
+                    instagram: "https://instagram.com/techcorp"
+                }
+            },
+            {
+                name: "InnoSoft",
+                description: "Yazılım geliştirmede yenilikçi",
+                website: "https://innosoft.example.com",
+                imageFile: "sponsor2.png",
+                social: {
+                    youtube: "https://youtube.com/innosoft",
+                    facebook: null,
+                    x: "https://x.com/innosoft",
+                    instagram: "https://instagram.com/innosoft"
+                }
+            },
+            {
+                name: "GreenEnergy",
+                description: "Sürdürülebilir enerji çözümleri",
+                website: "https://greenenergy.example.com",
+                imageFile: "sponsor3.jpg",
+                social: {
+                    youtube: "https://youtube.com/greenenergy",
+                    facebook: "https://facebook.com/greenenergy",
+                    x: "https://x.com/greenenergy",
+                    instagram: "https://instagram.com/greenenergy"
+                }
+            },
+            {
+                name: "EduFuture",
+                description: "Eğitim teknolojilerinde öncü",
+                website: "https://edufuture.example.com",
+                imageFile: "sponsor4.png",
+                social: {
+                    youtube: "https://youtube.com/edufuture",
+                    facebook: "https://facebook.com/edufuture",
+                    x: "https://x.com/edufuture",
+                    instagram: "https://instagram.com/edufuture"
+                }
+            },
+            {
+                name: "HealthPlus",
+                description: "Sağlık hizmetlerinde mükemmellik",
+                website: "https://healthplus.example.com",
+                imageFile: "sponsor5.jpg",
+                social: {
+                    youtube: "https://youtube.com/healthplus",
+                    facebook: "https://facebook.com/healthplus",
+                    x: "https://x.com/healthplus",
+                    instagram: "https://instagram.com/healthplus"
+                }
+            },
+            {
+                name: "FoodExpress",
+                description: "Hızlı ve sağlıklı yemek hizmeti",
+                website: "https://foodexpress.example.com",
+                imageFile: "sponsor6.png",
+                social: {
+                    youtube: "https://youtube.com/foodexpress",
+                    facebook: "https://facebook.com/foodexpress",
+                    x: "https://x.com/foodexpress",
+                    instagram: "https://instagram.com/foodexpress"
+                }
+            },
+            {
+                name: "TravelNow",
+                description: "Seyahat deneyimleriniz için",
+                website: "https://travelnow.example.com",
+                imageFile: "sponsor7.jpg",
+                social: {
+                    youtube: "https://youtube.com/travelnow",
+                    facebook: "https://facebook.com/travelnow",
+                    x: "https://x.com/travelnow",
+                    instagram: "https://instagram.com/travelnow"
+                }
+            },
+            {
+                name: "BuildRight",
+                description: "İnşaat sektöründe kalite",
+                website: "https://buildright.example.com",
+                imageFile: "sponsor8.png",
+                social: {
+                    youtube: "https://youtube.com/buildright",
+                    facebook: "https://facebook.com/buildright",
+                    x: "https://x.com/buildright",
+                    instagram: "https://instagram.com/buildright"
+                }
+            },
+            {
+                name: "FashionHub",
+                description: "Moda dünyasının merkezi",
+                website: "https://fashionhub.example.com",
+                imageFile: "sponsor9.jpg",
+                social: {
+                    youtube: "https://youtube.com/fashionhub",
+                    facebook: "https://facebook.com/fashionhub",
+                    x: "https://x.com/fashionhub",
+                    instagram: "https://instagram.com/fashionhub"
+                }
+            },
+            {
+                name: "AutoMasters",
+                description: "Otomotiv sektöründe uzman",
+                website: "https://automasters.example.com",
+                imageFile: "sponsor10.png",
+                social: {
+                    youtube: "https://youtube.com/automasters",
+                    facebook: "https://facebook.com/automasters",
+                    x: "https://x.com/automasters",
+                    instagram: "https://instagram.com/automasters"
+                }
+            }
+        ];
+        
+        sponsorsSlider.innerHTML = '';
+        
+        sponsors.forEach(sponsor => {
+            const card = document.createElement('div');
+            card.className = 'sponsor-card';
+            card.innerHTML = `
+                <img src="${sponsor.imageFile}" alt="${sponsor.name}"
+                     onerror="this.onerror=null; this.src='https://via.placeholder.com/300x150?text=${sponsor.name.replace(' ', '+')}'">
+                <h3>${sponsor.name}</h3>
+                <p>${sponsor.description}</p>
+                <div class="social-links">
+                    ${sponsor.social.youtube ? `<a href="${sponsor.social.youtube}" class="youtube" target="_blank"><i>YouTube</i></a>` : ''}
+                    ${sponsor.social.facebook ? `<a href="${sponsor.social.facebook}" class="facebook" target="_blank"><i>Facebook</i></a>` : ''}
+                    ${sponsor.social.x ? `<a href="${sponsor.social.x}" class="x" target="_blank"><i>X</i></a>` : ''}
+                    ${sponsor.social.instagram ? `<a href="${sponsor.social.instagram}" class="instagram" target="_blank"><i>Instagram</i></a>` : ''}
+                </div>
+            `;
+            card.addEventListener('click', (e) => {
+                if (e.target === card || e.target.tagName === 'H3' || e.target.tagName === 'P' || e.target.tagName === 'IMG') {
+                    window.open(sponsor.website, '_blank');
+                }
+            });
+            sponsorsSlider.appendChild(card);
+        });
+        
+        initSponsorSliderDrag();
+    }
+
     // Sponsor slider sürükleme
     function initSponsorSliderDrag() {
         let isDown = false;
@@ -443,39 +619,8 @@ document.addEventListener('DOMContentLoaded', function() {
             sponsorsSlider.scrollLeft += e.deltaY;
         });
     }
-    
-    // Sponsorları yükle
-    function loadSponsors() {
-        const sponsors = [
-            {
-                name: "Animatronik",
-                description: "3d tasarımda 1 numara",
-                website: "https://techcorp.example.com",
-                imageFile: "logo.jpg"
-            },
-           
-        ];
-        
-        sponsorsSlider.innerHTML = '';
-        
-        sponsors.forEach(sponsor => {
-            const card = document.createElement('div');
-            card.className = 'sponsor-card';
-            card.innerHTML = `
-                <img src="${sponsor.imageFile}" alt="${sponsor.name}"
-                     onerror="this.onerror=null; this.src='https://via.placeholder.com/300x150?text=${sponsor.name.replace(' ', '+')}'"
-                     style="width:75%; height:125px; object-fit:cover; margin-bottom:10px;">
-                <h3>${sponsor.name}</h3>
-                <p>${sponsor.description}</p>
-            `;
-            card.addEventListener('click', () => window.open(sponsor.website, '_blank'));
-            sponsorsSlider.appendChild(card);
-        });
-        
-        initSponsorSliderDrag();
-    }
-    
-       // Başvuru kontrolü
+
+    // Başvuru kontrolü
     function checkApplication() {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         const applications = JSON.parse(localStorage.getItem('applications')) || [];
@@ -630,47 +775,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 const application = applications.find(app => app.email === email);
                 
                 if (application) {
+                    let socialLinks = '';
+                    if (application.socialLinks) {
+                        socialLinks = `
+                            <p><strong>Sosyal Medya:</strong></p>
+                            <p>YouTube: ${application.socialLinks.youtube || 'Yok'}</p>
+                            <p>Facebook: ${application.socialLinks.facebook || 'Yok'}</p>
+                            <p>X: ${application.socialLinks.x || 'Yok'}</p>
+                            <p>Instagram: ${application.socialLinks.instagram || 'Yok'}</p>
+                        `;
+                    }
+                    
                     alert(`
                         İsim: ${application.firstName} ${application.lastName}
                         Telefon: ${application.phone}
-                        Yaş: ${application.age}
-                        Okul: ${application.school}
-                        Konum: ${application.location}
+                        ${socialLinks}
                         Şirket: ${application.company}
                         Başvuru Tarihi: ${application.date}
                     `);
                 }
             });
         });
-        // Dark mode değişikliği olduğunda sözleşme linkini de güncelle
-darkModeToggle.addEventListener('change', function() {
-    if (this.checked) {
-        document.body.classList.add('dark-mode');
-        localStorage.setItem('darkMode', 'enabled');
-    } else {
-        document.body.classList.remove('dark-mode');
-        localStorage.setItem('darkMode', 'disabled');
-    }
-    
-    // Sözleşme linkinin rengini güncelle
-    updateContractLinkStyle();
-});
-
-// Sayfa yüklendiğinde sözleşme linki stilini ayarla
-function updateContractLinkStyle() {
-    const contractLink = document.querySelector('.contract-link a');
-    if (document.body.classList.contains('dark-mode')) {
-        contractLink.style.backgroundColor = '#2c3e50';
-    } else {
-        contractLink.style.backgroundColor = '#3498db';
-    }
-}
-
-// Sayfa yüklendiğinde çağır
-document.addEventListener('DOMContentLoaded', function() {
-    // ... diğer kodlar ...
-    updateContractLinkStyle();
-});
+        
         document.querySelectorAll('.delete-application').forEach(btn => {
             btn.addEventListener('click', function() {
                 const email = this.getAttribute('data-email');
@@ -687,5 +813,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Sayfa yüklendiğinde çalıştırılacak fonksiyonlar
     if (currentUser) {
         initAdminPanel();
+        initSponsorSliderDrag();
     }
 });
