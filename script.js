@@ -416,7 +416,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const sponsors = [
             {
                 name: "Animatronik",
-                description: 3d korku tasarımında 1.sırada",
+                description: "3d korku tasarımında 1.sırada",
                 website: "https://web-sıte-belirtilmemiş.com",
                 imageFile: "logo.jpg",
                 social: {
