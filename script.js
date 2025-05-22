@@ -426,6 +426,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     instagram: ""
                 }
             },
+            {
+                name: "Bursaspor",
+                description: "En iyi takım olabilir!",
+                website: "",
+                imageFile: "bursaspor.jpg",
+                social: {
+                    youtube: "",
+                    facebook: "",
+                    x: "",
+                    instagram: ""
+                }
+            },
             
         ];
         
